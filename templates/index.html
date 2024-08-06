@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Person Registration</title>
+    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Person Registration</h1>
+    <form id="registration-form">
+        <label for="id">ID:</label><br>
+        <input type="text" id="id" name="id"><br>
+        <label for="nome_pessoa">Nome:</label><br>
+        <input type="text" id="nome_pessoa" name="nome_pessoa"><br><br>
+        <input type="submit" value="Cadastra">
+    </form>
+    <h2>Pessoas</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Token MD5</th>
+            </tr>
+        </thead>
+        <tbody id="people-list">
+            {% for person in people %}
+            <tr>
+                <td>{{ person.id }}</td>
+                <td>{{ person.nome_pessoa }}</td>
+                <td>{{ person.token }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        $(document).ready(function() {
+            $('#registration-form').on('submit', function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: '/register',
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(data) {
+                        fetchPeople();
+                        $('#id').val('');
+                        $('#nome_pessoa').val('');
+                    }
+                });
+            });
+
+            function fetchPeople() {
+                $.ajax({
+                    url: '/get_people',
+                    method: 'GET',
+                    success: function(data) {
+                        var peopleList = $('#people-list');
+                        peopleList.empty();
+                        data.forEach(function(person) {
+                            peopleList.append(
+                                '<tr>' +
+                                '<td>' + person.id + '</td>' +
+                                '<td>' + person.nome_pessoa + '</td>' +
+                                '<td>' + person.token + '</td>' +
+                                '</tr>'
+                            );
+                        });
+                    }
+                });
+            }
+
+            fetchPeople();
+        });
+    </script>
+</body>
+</html>
