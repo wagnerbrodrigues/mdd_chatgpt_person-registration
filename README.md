@@ -29,7 +29,7 @@ person_registration/
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/person-registration.git
+   git clone https://github.com/wagnerbrodrigues/mdd_chatgpt_person-registration
    cd person-registration
    ```
 
